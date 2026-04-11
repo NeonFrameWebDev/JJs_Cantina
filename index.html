@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JJ's Cantina | Cholla Bay, Rocky Point Mexico</title>
+  <meta name="description" content="JJ's Cantina. The original waterfront bar and restaurant in Cholla Bay, Puerto Peñasco, Sonora, Mexico. Live music, fish tacos, cold margaritas, and the best sunset on the Sea of Cortez. Est. 1984." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* pulled directly from the logo */
+      --yellow:     #F5C832;
+      --gold:       #F5A01A;
+      --orange:     #E8651A;
+      --rust:       #C43A18;
+      --teal:       #2BBCD4;
+      --teal-mid:   #1A9DB8;
+      --teal-dark:  #0E6A7A;
+      --navy:       #0C1A20;
+      --navy-mid:   #102430;
+      --navy-light: #163040;
+      --sand:       #F5EDD4;
+      --muted:      #8ABBC6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--navy);
+      color: var(--sand);
+      overflow-x: hidden;
+    }
+
+    /* STRIPE DIVIDER — matches the sun stripes in the logo */
+    .stripe-bar {
+      height: 6px;
+      background: linear-gradient(90deg,
+        var(--rust) 0%,
+        var(--orange) 25%,
+        var(--gold) 50%,
+        var(--yellow) 75%,
+        var(--teal) 100%);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(12, 26, 32, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--teal-dark);
+    }
+
+    .nav-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, var(--rust), var(--orange), var(--gold), var(--yellow), var(--teal));
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      height: 62px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 48px;
+      width: 48px;
+      object-fit: contain;
+    }
+
+    .nav-logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--teal);
+      line-height: 1;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav ul a {
+      color: var(--sand);
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.88rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--teal); }
+
+    .nav-call {
+      background: var(--teal) !important;
+      color: var(--navy) !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 2px;
+      font-weight: 600;
+      transition: background 0.2s !important;
+    }
+
+    .nav-call:hover { background: var(--teal-mid) !important; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--sand); border-radius: 1px; }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 65px; left: 0; right: 0;
+      background: rgba(12, 26, 32, 0.98);
+      z-index: 99;
+      padding: 1.5rem 2rem;
+      flex-direction: column;
+      gap: 1.2rem;
+      border-bottom: 2px solid var(--teal-dark);
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu a {
+      color: var(--sand);
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--teal); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 60%, rgba(43, 188, 212, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 100%, rgba(196, 58, 24, 0.2) 0%, transparent 50%),
+        linear-gradient(180deg, #070F14 0%, #0C1A20 50%, #0E2030 100%);
+    }
+
+    /* Horizontal sun stripes as hero background accent */
+    .hero-stripes {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 280px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-stripes::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 100%;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(245, 200, 50, 0.06) 20%,
+        rgba(245, 160, 26, 0.08) 35%,
+        rgba(232, 101, 26, 0.1) 50%,
+        rgba(196, 58, 24, 0.12) 65%,
+        rgba(43, 188, 212, 0.15) 80%,
+        rgba(14, 106, 122, 0.2) 100%
+      );
+    }
+
+    .hero-wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 2;
+    }
+
+    .stars {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60%;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle 3s infinite alternate;
+    }
+
+    @keyframes twinkle { from { opacity: 0.1; } to { opacity: 0.8; } }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    .hero-logo {
+      width: clamp(160px, 25vw, 240px);
+      object-fit: contain;
+      margin-bottom: 1.6rem;
+      filter: drop-shadow(0 0 30px rgba(43, 188, 212, 0.35)) drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 1;
+      letter-spacing: 5px;
+      color: var(--sand);
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-sub {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+      letter-spacing: 4px;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-tagline {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 440px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--navy);
+      border: 2px solid var(--teal);
+    }
+
+    .btn-primary:hover { background: var(--teal-mid); border-color: var(--teal-mid); transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--sand);
+      border: 2px solid rgba(245, 237, 212, 0.3);
+    }
+
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+    /* SECTIONS */
+    section { padding: 6rem 2rem; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+      letter-spacing: 2px;
+      color: var(--sand);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title span { color: var(--teal); }
+
+    /* ABOUT */
+    #about { background: var(--navy-mid); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+      font-size: 0.96rem;
+    }
+
+    .about-text p strong { color: var(--sand); }
+
+    .about-visual { display: flex; flex-direction: column; gap: 1rem; }
+
+    .stat-card {
+      background: rgba(43, 188, 212, 0.06);
+      border: 1px solid rgba(43, 188, 212, 0.2);
+      border-left: 3px solid var(--teal);
+      border-radius: 2px;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: background 0.2s;
+    }
+
+    .stat-card:hover { background: rgba(43, 188, 212, 0.1); }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      color: var(--teal);
+      line-height: 1;
+      min-width: 72px;
+    }
+
+    .stat-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+    .stat-desc strong { color: var(--sand); display: block; font-size: 0.96rem; margin-bottom: 0.2rem; }
+
+    /* MENU */
+    #menu { background: var(--navy); }
+
+    .menu-header { text-align: center; margin-bottom: 3rem; }
+    .menu-header p { color: var(--muted); max-width: 480px; margin: 0 auto; line-height: 1.8; font-size: 0.95rem; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .menu-card {
+      background: var(--navy-mid);
+      border: 1px solid rgba(43, 188, 212, 0.12);
+      border-top: 2px solid transparent;
+      border-radius: 2px;
+      padding: 1.8rem;
+      transition: border-color 0.2s, transform 0.2s, border-top-color 0.2s;
+    }
+
+    .menu-card:hover {
+      border-color: rgba(43, 188, 212, 0.25);
+      border-top-color: var(--teal);
+      transform: translateY(-3px);
+    }
+
+    .menu-card-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+
+    .menu-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 1.5px;
+      color: var(--sand);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.75; }
+
+    .tag {
+      display: inline-block;
+      margin-top: 0.9rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid rgba(43, 188, 212, 0.35);
+      padding: 0.2rem 0.65rem;
+      border-radius: 1px;
+    }
+
+    /* MUSIC */
+    #music {
+      background: var(--navy-light);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #music::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(43, 188, 212, 0.08) 0%, transparent 65%);
+    }
+
+    /* Sun stripe accent at top of music section */
+    #music .stripe-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+    }
+
+    .music-content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .music-content p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.85;
+      margin-bottom: 1.5rem;
+    }
+
+    .music-features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .music-feat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .music-feat-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      background: rgba(43, 188, 212, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .music-feat span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--sand);
+    }
+
+    /* VISIT */
+    #visit { background: var(--navy-mid); }
+
+    .visit-header { text-align: center; margin-bottom: 3rem; }
+
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .visit-col-label {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.2rem;
+      font-size: 0.82rem;
+      border-bottom: 1px solid rgba(43, 188, 212, 0.2);
+      padding-bottom: 0.6rem;
+    }
+
+    .hours-table { width: 100%; border-collapse: collapse; }
+    .hours-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .hours-table tr:last-child { border-bottom: none; }
+    .hours-table td { padding: 0.75rem 0; font-size: 0.92rem; vertical-align: middle; }
+    .hours-table .day { color: var(--sand); font-family: 'Oswald', sans-serif; letter-spacing: 1px; width: 45%; }
+    .hours-table .time { color: var(--muted); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .hours-table .time .t-open { display: inline-block; width: 5.2em; text-align: right; }
+    .hours-table .time .t-close { display: inline-block; width: 5.2em; text-align: left; }
+    .hours-table .highlight .day { color: var(--yellow); }
+    .hours-table .highlight .time { color: var(--gold); }
+
+    .hours-note { color: var(--muted); font-size: 0.78rem; margin-top: 1rem; font-style: italic; }
+
+    .location-info { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .loc-item { display: flex; gap: 1rem; align-items: flex-start; }
+
+    .loc-icon {
+      width: 40px; height: 40px; min-width: 40px;
+      border-radius: 50%;
+      background: rgba(43, 188, 212, 0.1);
+      border: 1px solid rgba(43, 188, 212, 0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    .loc-text { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+    .loc-text strong {
+      color: var(--sand);
+      display: block;
+      margin-bottom: 0.2rem;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+    .loc-text a { color: var(--teal); text-decoration: none; transition: color 0.2s; }
+    .loc-text a:hover { color: var(--yellow); }
+
+    .map-block {
+      margin-top: 2rem;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(43, 188, 212, 0.25);
+    }
+
+    .map-block iframe {
+      display: block;
+      width: 100%;
+      height: 280px;
+      border: 0;
+    }
+
+    .map-block-link {
+      display: block;
+      padding: 0.6rem 1rem;
+      background: var(--navy-light);
+      text-align: center;
+      color: var(--teal);
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .map-block-link:hover { color: var(--yellow); background: var(--navy-mid); }
+
+    /* FOOTER */
+    footer {
+      background: #060E12;
+      border-top: none;
+      padding: 3.5rem 2rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo-img {
+      width: 80px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 2px 12px rgba(43, 188, 212, 0.3));
+    }
+
+    .footer-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: var(--sand);
+      margin-bottom: 0.3rem;
+    }
+
+    .footer-tagline {
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--teal); }
+
+    .footer-copy { color: rgba(138, 187, 198, 0.3); font-size: 0.72rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 820px) {
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .visit-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-stripe"></div>
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <img src="logo.png" alt="JJ's Cantina" />
+        <span class="nav-logo-text">JJ's Cantina</span>
+      </a>
+      <ul>
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#music">Live Music</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li><a href="tel:+526383836812" class="nav-call">Call Us</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="toggleMenu()">Our Story</a>
+    <a href="#menu" onclick="toggleMenu()">Menu</a>
+    <a href="#music" onclick="toggleMenu()">Live Music</a>
+    <a href="#visit" onclick="toggleMenu()">Visit</a>
+    <a href="tel:+526383836812">Call Us</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="hero-stripes"></div>
+
+    <svg class="hero-wave" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 60 C180 20 360 100 540 60 C720 20 900 100 1080 60 C1260 20 1380 80 1440 60 L1440 120 L0 120 Z" fill="rgba(43,188,212,0.08)" />
+      <path d="M0 80 C200 40 400 110 600 70 C800 30 1000 100 1200 65 C1320 45 1400 75 1440 70 L1440 120 L0 120 Z" fill="rgba(14,106,122,0.12)" />
+    </svg>
+
+    <div class="hero-content">
+      <img src="logo.png" alt="JJ's Cantina Est. 1984, Cholla Bay, Mexico" class="hero-logo" />
+      <h1 class="hero-title">JJ's Cantina</h1>
+      <p class="hero-sub">Cholla Bay &bull; Puerto Peñasco &bull; Sonora</p>
+      <p class="hero-tagline">Where the desert meets the sea. Cold drinks, fresh food, live music, and the best sunset on the Sea of Cortez.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary">See Our Menu</a>
+        <a href="#visit" class="btn btn-outline">Plan Your Visit</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-bar"></div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="section-label">Our Story</p>
+          <h2 class="section-title">A Rocky Point <span>Legend</span></h2>
+          <p>JJ's Cantina didn't just open in Cholla Bay. <strong>It helped put Rocky Point on the map.</strong> Since 1984, this waterfront landmark has been the gathering place for locals, expats, and visitors from across the border who know that the best view of the Sea of Cortez comes with a cold margarita in hand.</p>
+          <p>Perched on the tiered stone terraces above the bay, JJ's is everything a cantina should be: <strong>unpretentious, welcoming, and alive.</strong> The walls are lined with decades of memories. The bartenders have poured a few thousand sunsets. The kitchen keeps it real with fresh, honest food that belongs right here on the water.</p>
+          <p>Recently renovated and better than ever, JJ's carries its history proudly while looking toward the future. <strong>Same legendary soul. Brand new experience.</strong></p>
+        </div>
+        <div class="about-visual">
+          <div class="stat-card">
+            <div class="stat-num">40+</div>
+            <div class="stat-desc"><strong>Years of History</strong>Serving Rocky Point since 1984.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2</div>
+            <div class="stat-desc"><strong>Outdoor Bars</strong>Multi-tiered open-air patio with panoramic Sea of Cortez views.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">Live</div>
+            <div class="stat-desc"><strong>Music Every Weekend</strong>Multiple bands on the open-air stage under the Sonoran sky.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">&#9786;</div>
+            <div class="stat-desc"><strong>Pet Friendly</strong>Four-legged friends are welcome on the patio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-bar"></div>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="container">
+      <div class="menu-header">
+        <p class="section-label">Kitchen &amp; Bar</p>
+        <h2 class="section-title">Made for <span>the Water</span></h2>
+        <p>Fresh, bold, and unapologetically Sonoran. From the Sea of Cortez to your plate.</p>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-card">
+          <div class="menu-card-icon">🐟</div>
+          <h3>Fish Tacos</h3>
+          <p>JJ's signature. Fresh catch, lightly battered, topped with cabbage slaw, crema, and house salsa. A true taste of the Sea of Cortez.</p>
+          <span class="tag">House Specialty</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-icon">🌭</div>
+          <h3>Sonoran Hot Dog</h3>
+          <p>The beloved Sonoran classic. Bacon-wrapped and topped with pinto beans, onion, tomato, mayo, mustard, and jalapeño.</p>
+          <span class="tag">Regional Icon</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-icon">🦪</div>
+          <h3>Grilled Oysters</h3>
+          <p>Fresh-shucked and kissed by the grill. Perfectly prepared with a squeeze of lime. The Sea of Cortez on a shell.</p>
+          <span class="tag">Fresh Daily</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-icon">🍗</div>
+          <h3>Beer-Battered Tenders</h3>
+          <p>Golden, crispy, and seriously addictive. Some of the best chicken tenders you will find on either side of the border.</p>
+          <span class="tag">Crowd Favorite</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-icon">🌶️</div>
+          <h3>Chile Rellenos</h3>
+          <p>Roasted poblano stuffed with melted cheese, lightly battered and fried. A Mexican classic done the Sonoran way.</p>
+          <span class="tag">House Made</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-icon">🍹</div>
+          <h3>Margaritas &amp; Cocktails</h3>
+          <p>From the classic house margarita to cold Mexican beers. Our bar was built for sunsets. Happy hour prices to match.</p>
+          <span class="tag">Full Bar</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-bar"></div>
+
+  <!-- MUSIC -->
+  <section id="music">
+    <div class="stripe-bar"></div>
+    <div class="container">
+      <div class="music-content">
+        <p class="section-label">Entertainment</p>
+        <h2 class="section-title">Live Music Under the <span>Sonoran Sky</span></h2>
+        <p>The open-air stage at JJ's is one of a kind. Every weekend, multiple bands take the stage as the sun drops into the Sea of Cortez behind them, painting the sky orange, purple, and gold. There is no better soundtrack to a Rocky Point evening.</p>
+        <p>Whether you are dancing on the patio or settling into a stone chair with a cold drink, the music at JJ's is not background noise. <strong>It is the main event.</strong></p>
+        <a href="#visit" class="btn btn-outline">Check Hours &amp; Plan Your Visit</a>
+        <div class="music-features">
+          <div class="music-feat">
+            <div class="music-feat-icon">🎸</div>
+            <span>Live Bands</span>
+          </div>
+          <div class="music-feat">
+            <div class="music-feat-icon">🌅</div>
+            <span>Sunset Views</span>
+          </div>
+          <div class="music-feat">
+            <div class="music-feat-icon">🎤</div>
+            <span>Open-Air Stage</span>
+          </div>
+          <div class="music-feat">
+            <div class="music-feat-icon">🍹</div>
+            <span>Full Bar</span>
+          </div>
+          <div class="music-feat">
+            <div class="music-feat-icon">🐾</div>
+            <span>Pet Friendly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-bar"></div>
+
+  <!-- VISIT -->
+  <section id="visit">
+    <div class="container">
+      <div class="visit-header">
+        <p class="section-label">Come Find Us</p>
+        <h2 class="section-title">Hours &amp; <span>Location</span></h2>
+      </div>
+      <div class="visit-grid">
+        <div>
+          <p class="visit-col-label">Hours of Operation</p>
+          <table class="hours-table">
+            <tr class="highlight"><td class="day">Friday</td><td class="time"><span class="t-open">8:30 AM</span> &ndash; <span class="t-close">11:00 PM</span></td></tr>
+            <tr class="highlight"><td class="day">Saturday</td><td class="time"><span class="t-open">8:30 AM</span> &ndash; <span class="t-close">11:00 PM</span></td></tr>
+            <tr><td class="day">Sunday</td><td class="time"><span class="t-open">8:30 AM</span> &ndash; <span class="t-close">10:00 PM</span></td></tr>
+            <tr><td class="day">Monday</td><td class="time"><span class="t-open">11:00 AM</span> &ndash; <span class="t-close">10:00 PM</span></td></tr>
+            <tr><td class="day">Tuesday</td><td class="time"><span class="t-open">9:00 AM</span> &ndash; <span class="t-close">9:00 PM</span></td></tr>
+            <tr><td class="day">Wednesday</td><td class="time"><span class="t-open">11:00 AM</span> &ndash; <span class="t-close">10:00 PM</span></td></tr>
+            <tr><td class="day">Thursday</td><td class="time"><span class="t-open">11:00 AM</span> &ndash; <span class="t-close">10:00 PM</span></td></tr>
+          </table>
+          <p class="hours-note">Open early Fri, Sat &amp; Sun. Live music weekends. Hours may vary on holidays.</p>
+        </div>
+        <div>
+          <p class="visit-col-label">Find Us</p>
+          <div class="location-info">
+            <div class="loc-item">
+              <div class="loc-icon">📍</div>
+              <div class="loc-text">
+                <strong>Address</strong>
+                Calle F S/N, Bahía La Choya<br/>
+                Puerto Peñasco, Sonora, Mexico
+              </div>
+            </div>
+            <div class="loc-item">
+              <div class="loc-icon">📞</div>
+              <div class="loc-text">
+                <strong>Phone</strong>
+                <a href="tel:+526383836812">+52 638 383 6812</a>
+              </div>
+            </div>
+            <div class="loc-item">
+              <div class="loc-icon">✉️</div>
+              <div class="loc-text">
+                <strong>Email</strong>
+                <a href="mailto:jjscantina@hotmail.com">jjscantina@hotmail.com</a>
+              </div>
+            </div>
+            <div class="loc-item">
+              <div class="loc-icon">📘</div>
+              <div class="loc-text">
+                <strong>Follow Us</strong>
+                <a href="https://www.facebook.com/JJsCantinaPuertoPenasco/" target="_blank" rel="noopener">Facebook: JJ's Cantina La Cholla</a>
+              </div>
+            </div>
+          </div>
+          <div class="map-block">
+            <iframe
+              src="https://www.google.com/maps?q=JJ%27s+Cantina+Calle+F+Bahia+la+Choya+Puerto+Penasco+Sonora+Mexico&output=embed&z=16"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="JJ's Cantina Location">
+            </iframe>
+            <a class="map-block-link" href="https://www.google.com/maps/search/JJ%27s+Cantina+Bahia+la+Choya+Puerto+Penasco+Sonora+Mexico" target="_blank" rel="noopener">Open in Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="stripe-bar"></div>
+  <footer>
+    <img src="logo.png" alt="JJ's Cantina" class="footer-logo-img" />
+    <p class="footer-name">JJ's Cantina</p>
+    <p class="footer-tagline">The Original &bull; Est. 1984 &bull; Cholla Bay, Rocky Point</p>
+    <div class="footer-links">
+      <a href="#about">Our Story</a>
+      <a href="#menu">Menu</a>
+      <a href="#music">Live Music</a>
+      <a href="#visit">Hours &amp; Location</a>
+      <a href="mailto:jjscantina@hotmail.com">Contact</a>
+    </div>
+    <p class="footer-copy">&copy; 2025 JJ's Cantina. Bahía La Choya, Puerto Peñasco, Sonora, Mexico.</p>
+  </footer>
+
+  <script>
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      const size = (Math.random() * 2 + 1) + 'px';
+      s.style.width = s.style.height = size;
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      starsEl.appendChild(s);
+    }
+
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobileMenu');
+      const hb = document.getElementById('hamburger');
+      if (!menu.contains(e.target) && !hb.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
