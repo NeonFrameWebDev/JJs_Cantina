@@ -401,13 +401,13 @@
     .section-title span { color: var(--teal); }
 
     /* ABOUT */
-    #about { background: var(--navy-mid); }
+    #about { background: var(--navy-mid); padding: 4rem 2rem; }
 
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
+      gap: 2.5rem;
+      align-items: start;
     }
 
     .about-text p {
@@ -715,10 +715,25 @@
     .footer-copy { color: rgba(138, 187, 198, 0.3); font-size: 0.72rem; }
 
     /* ABOUT SLIDESHOW */
+    .asl-frame {
+      padding: 3px;
+      background: linear-gradient(135deg,
+        var(--rust) 0%,
+        var(--orange) 25%,
+        var(--gold) 50%,
+        var(--yellow) 70%,
+        var(--teal) 100%);
+      border-radius: 10px;
+      box-shadow:
+        0 0 28px rgba(43,188,212,0.22),
+        0 0 60px rgba(245,168,26,0.1),
+        0 6px 30px rgba(0,0,0,0.45);
+    }
+
     .about-slideshow {
       position: relative;
       height: 420px;
-      border-radius: 4px;
+      border-radius: 8px;
       overflow: hidden;
       background: var(--navy-light);
     }
@@ -764,7 +779,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
-      margin-top: 3rem;
+      margin-top: 2rem;
     }
 
     /* RESPONSIVE */
@@ -845,20 +860,22 @@
           <p>Perched on the tiered stone terraces above the bay, JJ's is everything a cantina should be: <strong>unpretentious, welcoming, and alive.</strong> The walls are lined with decades of memories. The bartenders have poured a few thousand sunsets. The kitchen keeps it real with fresh, honest food that belongs right here on the water.</p>
           <p>Recently renovated and better than ever, JJ's carries its history proudly while looking toward the future. <strong>Same legendary soul. Brand new experience.</strong></p>
         </div>
-        <div class="about-slideshow">
-          <div class="asl-slide active"><img src="assets/about_1.jpg" alt="JJ's Cantina mural" /></div>
-          <div class="asl-slide"><img src="assets/about_5.jpg" alt="JJ's Cantina server" loading="lazy" /></div>
-          <div class="asl-slide"><img src="assets/about_2.jpg" alt="Cantina patio at night" loading="lazy" /></div>
-          <div class="asl-slide"><img src="assets/about_3.jpg" alt="Guests at JJ's Cantina" loading="lazy" /></div>
-          <div class="asl-slide"><img src="assets/about_4.jpg" alt="Outdoor terrace at sunset" loading="lazy" /></div>
-          <div class="asl-slide"><img src="assets/about_6.jpg" alt="Group at JJ's Cantina sign" loading="lazy" /></div>
-          <div class="asl-dots">
-            <button class="asl-dot active" aria-label="Photo 1"></button>
-            <button class="asl-dot" aria-label="Photo 2"></button>
-            <button class="asl-dot" aria-label="Photo 3"></button>
-            <button class="asl-dot" aria-label="Photo 4"></button>
-            <button class="asl-dot" aria-label="Photo 5"></button>
-            <button class="asl-dot" aria-label="Photo 6"></button>
+        <div class="asl-frame">
+          <div class="about-slideshow">
+            <div class="asl-slide active"><img src="assets/about_1.jpg" alt="JJ's Cantina mural" /></div>
+            <div class="asl-slide"><img src="assets/about_5.jpg" alt="JJ's Cantina server" loading="lazy" /></div>
+            <div class="asl-slide"><img src="assets/about_2.jpg" alt="Cantina patio at night" loading="lazy" /></div>
+            <div class="asl-slide"><img src="assets/about_3.jpg" alt="Guests at JJ's Cantina" loading="lazy" /></div>
+            <div class="asl-slide"><img src="assets/about_4.jpg" alt="Outdoor terrace at sunset" loading="lazy" /></div>
+            <div class="asl-slide"><img src="assets/about_6.jpg" alt="Group at JJ's Cantina sign" loading="lazy" /></div>
+            <div class="asl-dots">
+              <button class="asl-dot active" aria-label="Photo 1"></button>
+              <button class="asl-dot" aria-label="Photo 2"></button>
+              <button class="asl-dot" aria-label="Photo 3"></button>
+              <button class="asl-dot" aria-label="Photo 4"></button>
+              <button class="asl-dot" aria-label="Photo 5"></button>
+              <button class="asl-dot" aria-label="Photo 6"></button>
+            </div>
           </div>
         </div>
       </div>
