@@ -499,6 +499,27 @@
       border-radius: 1px;
     }
 
+    /* MENU PHOTOS */
+    .menu-photos { margin-top: 3.5rem; }
+
+    .menu-photos-label {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .menu-photo-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .menu-photo-row img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      border: 2px solid rgba(43,188,212,0.2);
+    }
+
     /* MUSIC */
     #music {
       background: var(--navy-light);
@@ -790,6 +811,7 @@
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .about-slideshow { height: 280px; }
       .about-stats { grid-template-columns: repeat(2, 1fr); }
+      .menu-photo-row { grid-template-columns: 1fr; }
       .visit-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -913,40 +935,48 @@
       </div>
       <div class="menu-grid">
         <div class="menu-card">
-          <div class="menu-card-icon">🐟</div>
-          <h3>Fish Tacos</h3>
-          <p>JJ's signature. Fresh catch, lightly battered, topped with cabbage slaw, crema, and house salsa. A true taste of the Sea of Cortez.</p>
-          <span class="tag">House Specialty</span>
+          <div class="menu-card-icon">🍹</div>
+          <h3>Margaritas &amp; Frozen Drinks</h3>
+          <p>JJ's House Margarita, Cadillac, Fresh Premium, Piña Colada, Miami Vice, Frozen Sangria and more. Built for sunsets on the bay.</p>
+          <span class="tag">Full Bar</span>
         </div>
         <div class="menu-card">
-          <div class="menu-card-icon">🌭</div>
-          <h3>Sonoran Hot Dog</h3>
-          <p>The beloved Sonoran classic. Bacon-wrapped and topped with pinto beans, onion, tomato, mayo, mustard, and jalapeño.</p>
-          <span class="tag">Regional Icon</span>
+          <div class="menu-card-icon">🍺</div>
+          <h3>Beer, Wine &amp; Buckets</h3>
+          <p>Tecate, Heineken, Dos Equis, Bohemia, Laguintas IPA and more. Grab an Iced Bucket -- 5 beers, 6th is free. Ring of Fire buckets available.</p>
+          <span class="tag">Cold &amp; Ready</span>
         </div>
         <div class="menu-card">
-          <div class="menu-card-icon">🦪</div>
-          <h3>Grilled Oysters</h3>
-          <p>Fresh-shucked and kissed by the grill. Perfectly prepared with a squeeze of lime. The Sea of Cortez on a shell.</p>
+          <div class="menu-card-icon">🥗</div>
+          <h3>Starters &amp; Salads</h3>
+          <p>Chips &amp; guac, steamer clams, Mexican shrimp cocktail, Mar de Cortez ceviche, nachos, chicken wings, Caesar and garden salads.</p>
           <span class="tag">Fresh Daily</span>
         </div>
         <div class="menu-card">
-          <div class="menu-card-icon">🍗</div>
-          <h3>Beer-Battered Tenders</h3>
-          <p>Golden, crispy, and seriously addictive. Some of the best chicken tenders you will find on either side of the border.</p>
-          <span class="tag">Crowd Favorite</span>
+          <div class="menu-card-icon">🌭</div>
+          <h3>Burgers, Dogs &amp; Sandwiches</h3>
+          <p>JJ's Smashburger, The Sonoran Dog, BBQ Grilled Cheese and more. Served with seasoned fries and our house special sauce.</p>
+          <span class="tag">House Favorites</span>
         </div>
         <div class="menu-card">
-          <div class="menu-card-icon">🌶️</div>
-          <h3>Chile Rellenos</h3>
-          <p>Roasted poblano stuffed with melted cheese, lightly battered and fried. A Mexican classic done the Sonoran way.</p>
-          <span class="tag">House Made</span>
+          <div class="menu-card-icon">🌮</div>
+          <h3>Tacos, Burritos &amp; Quesadillas</h3>
+          <p>Sonoran Quesadilla, Baja Burrito with locally caught fish, Cheesecake Rolls and all the good stuff. Your choice of protein.</p>
+          <span class="tag">Sonoran Style</span>
         </div>
         <div class="menu-card">
-          <div class="menu-card-icon">🍹</div>
-          <h3>Margaritas &amp; Cocktails</h3>
-          <p>From the classic house margarita to cold Mexican beers. Our bar was built for sunsets. Happy hour prices to match.</p>
-          <span class="tag">Full Bar</span>
+          <div class="menu-card-icon">🍳</div>
+          <h3>Breakfast</h3>
+          <p>Served Fri, Sat &amp; Sun 9AM&ndash;Noon. Pancakes with berry compote, shrimp &amp; avocado omelet, breakfast burrito and Gringo Breakfast.</p>
+          <span class="tag">Weekends Only</span>
+        </div>
+      </div>
+
+      <div class="menu-photos">
+        <p class="section-label menu-photos-label">Full Menu</p>
+        <div class="menu-photo-row">
+          <img src="assets/menu_1.jpg" alt="JJ's Cantina menu - drinks and breakfast" loading="lazy" />
+          <img src="assets/menu_2.jpg" alt="JJ's Cantina menu - food" loading="lazy" />
         </div>
       </div>
     </div>
