@@ -302,7 +302,9 @@
       gap: 0.5rem;
       text-decoration: none;
       opacity: 0;
-      animation: heroReveal 1s 1.45s ease forwards;
+      /* fade only — heroReveal ends on transform:none, which would wipe
+         out translateX(-50%) and shove the cue off-centre */
+      animation: heroFadeIn 1s 1.45s ease forwards;
     }
     .hero-scroll span {
       font-family: 'Oswald', sans-serif;
@@ -319,6 +321,7 @@
     }
 
     @keyframes heroReveal { to { opacity: 1; transform: none; } }
+    @keyframes heroFadeIn { to { opacity: 1; } }
     @keyframes titleShimmer { to { background-position: -220% center; } }
     @keyframes chevBob {
       0%, 100% { transform: rotate(45deg) translate(-3px, -3px); opacity: 0.45; }
@@ -327,12 +330,13 @@
 
     @media (prefers-reduced-motion: reduce) {
       .hero-logo, .hero-eyebrow, .hero-title, .hero-sub,
-      .hero-tagline, .hero-cta, .hero-scroll, .hero-scroll .chev {
+      .hero-tagline, .hero-cta {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
       }
-      .hero-scroll .chev { transform: rotate(45deg) !important; }
+      .hero-scroll { animation: none !important; opacity: 1 !important; transform: translateX(-50%) !important; }
+      .hero-scroll .chev { animation: none !important; transform: rotate(45deg) !important; }
     }
 
     /* BUTTONS */
