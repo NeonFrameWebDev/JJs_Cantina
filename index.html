@@ -523,6 +523,52 @@
       border-radius: 1px;
     }
 
+    /* LIGHTBOX */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lb-img {
+      max-width: 94vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      cursor: default;
+      animation: lbFade 0.2s ease;
+    }
+
+    @keyframes lbFade { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+
+    #lb-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      font-size: 2.2rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+      z-index: 2001;
+    }
+
+    #lb-close:hover { color: var(--teal); }
+
+    .about-slideshow { cursor: zoom-in; }
+    .menu-card-photo img { cursor: zoom-in; }
+    .menu-photo-row img { cursor: zoom-in; }
+
     /* MENU PHOTOS */
     .menu-photos { margin-top: 3.5rem; }
 
@@ -1936,6 +1982,46 @@
       });
       timer = setInterval(function() { goTo(cur + 1); }, 3500);
     })();
+
+    // Lightbox
+    (function() {
+      var lb    = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lb-img');
+
+      function open(src, alt) {
+        lbImg.src = src;
+        lbImg.alt = alt || '';
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+        lbImg.src = '';
+      }
+
+      lb.addEventListener('click', function(e) { if (e.target !== lbImg) close(); });
+      document.getElementById('lb-close').addEventListener('click', close);
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+
+      // Slideshow: open active slide on click
+      var ss = document.querySelector('.about-slideshow');
+      if (ss) ss.addEventListener('click', function() {
+        var img = ss.querySelector('.asl-slide.active img');
+        if (img) open(img.src, img.alt);
+      });
+
+      // Menu card photos + full menu photos
+      document.querySelectorAll('.menu-card-photo img, .menu-photo-row img').forEach(function(img) {
+        img.addEventListener('click', function() { open(this.src, this.alt); });
+      });
+    })();
   </script>
+
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button id="lb-close" aria-label="Close">&times;</button>
+    <img id="lb-img" src="" alt="" />
+  </div>
 </body>
 </html>
