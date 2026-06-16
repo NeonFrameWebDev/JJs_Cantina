@@ -714,30 +714,51 @@
 
     .footer-copy { color: rgba(138, 187, 198, 0.3); font-size: 0.72rem; }
 
-    /* ABOUT PHOTO GRID */
-    .about-photo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 200px;
-      gap: 5px;
+    /* ABOUT SLIDESHOW */
+    .about-slideshow {
+      position: relative;
+      height: 420px;
       border-radius: 4px;
       overflow: hidden;
+      background: var(--navy-light);
     }
 
-    .apg-item { overflow: hidden; }
+    .asl-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
 
-    .apg-item img {
+    .asl-slide.active { opacity: 1; }
+
+    .asl-slide img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.45s ease, filter 0.45s ease;
-      filter: brightness(0.88);
     }
 
-    .apg-item:hover img {
-      transform: scale(1.06);
-      filter: brightness(1.05);
+    .asl-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
     }
+
+    .asl-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .asl-dot.active { background: var(--teal); transform: scale(1.3); }
 
     .about-stats {
       display: grid;
@@ -751,7 +772,7 @@
       nav ul { display: none; }
       .hamburger { display: flex; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-photo-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 150px; }
+      .about-slideshow { height: 280px; }
       .about-stats { grid-template-columns: repeat(2, 1fr); }
       .visit-grid { grid-template-columns: 1fr; }
     }
@@ -824,13 +845,21 @@
           <p>Perched on the tiered stone terraces above the bay, JJ's is everything a cantina should be: <strong>unpretentious, welcoming, and alive.</strong> The walls are lined with decades of memories. The bartenders have poured a few thousand sunsets. The kitchen keeps it real with fresh, honest food that belongs right here on the water.</p>
           <p>Recently renovated and better than ever, JJ's carries its history proudly while looking toward the future. <strong>Same legendary soul. Brand new experience.</strong></p>
         </div>
-        <div class="about-photo-grid">
-          <div class="apg-item"><img src="assets/about_1.jpg" alt="JJ's Cantina mural" loading="lazy" /></div>
-          <div class="apg-item"><img src="assets/about_5.jpg" alt="JJ's Cantina server" loading="lazy" /></div>
-          <div class="apg-item"><img src="assets/about_2.jpg" alt="Cantina patio at night" loading="lazy" /></div>
-          <div class="apg-item"><img src="assets/about_3.jpg" alt="Guests at JJ's Cantina" loading="lazy" /></div>
-          <div class="apg-item"><img src="assets/about_4.jpg" alt="Outdoor terrace at sunset" loading="lazy" /></div>
-          <div class="apg-item"><img src="assets/about_6.jpg" alt="Group at JJ's Cantina sign" loading="lazy" /></div>
+        <div class="about-slideshow">
+          <div class="asl-slide active"><img src="assets/about_1.jpg" alt="JJ's Cantina mural" /></div>
+          <div class="asl-slide"><img src="assets/about_5.jpg" alt="JJ's Cantina server" loading="lazy" /></div>
+          <div class="asl-slide"><img src="assets/about_2.jpg" alt="Cantina patio at night" loading="lazy" /></div>
+          <div class="asl-slide"><img src="assets/about_3.jpg" alt="Guests at JJ's Cantina" loading="lazy" /></div>
+          <div class="asl-slide"><img src="assets/about_4.jpg" alt="Outdoor terrace at sunset" loading="lazy" /></div>
+          <div class="asl-slide"><img src="assets/about_6.jpg" alt="Group at JJ's Cantina sign" loading="lazy" /></div>
+          <div class="asl-dots">
+            <button class="asl-dot active" aria-label="Photo 1"></button>
+            <button class="asl-dot" aria-label="Photo 2"></button>
+            <button class="asl-dot" aria-label="Photo 3"></button>
+            <button class="asl-dot" aria-label="Photo 4"></button>
+            <button class="asl-dot" aria-label="Photo 5"></button>
+            <button class="asl-dot" aria-label="Photo 6"></button>
+          </div>
         </div>
       </div>
       <div class="about-stats">
@@ -1794,6 +1823,27 @@
         menu.classList.remove('open');
       }
     });
+
+    (function() {
+      var slides = document.querySelectorAll('.asl-slide');
+      var dots   = document.querySelectorAll('.asl-dot');
+      var cur = 0, timer;
+      function goTo(n) {
+        slides[cur].classList.remove('active');
+        dots[cur].classList.remove('active');
+        cur = (n + slides.length) % slides.length;
+        slides[cur].classList.add('active');
+        dots[cur].classList.add('active');
+      }
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() {
+          goTo(i);
+          clearInterval(timer);
+          timer = setInterval(function() { goTo(cur + 1); }, 3500);
+        });
+      });
+      timer = setInterval(function() { goTo(cur + 1); }, 3500);
+    })();
   </script>
 </body>
 </html>
