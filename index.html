@@ -505,6 +505,8 @@
     .menu-card-photo img.pos-top { object-position: center top; }
     .menu-card-photo img.pos-mid-bottom { object-position: center 20%; }
     .menu-card-photo img.fit-contain { object-fit: contain; background: var(--navy-mid); }
+    .menu-card-photo img.zoom-in { transform: scale(1.4); }
+    .menu-card-photo img.pos-right { object-position: 68% 35%; }
 
     .menu-card:hover .menu-card-photo img { transform: scale(1.05); }
 
@@ -970,6 +972,9 @@
           <span class="tag">Cold &amp; Ready</span>
         </div>
         <div class="menu-card">
+          <div class="menu-card-photo">
+            <img src="assets/starters.jpg" alt="JJ's Cantina guacamole and chips" loading="lazy" class="pos-right" />
+          </div>
           <div class="menu-card-icon">🥗</div>
           <h3>Starters &amp; Salads</h3>
           <p>Chips &amp; guac, steamer clams, Mexican shrimp cocktail, Mar de Cortez ceviche, nachos, chicken wings, Caesar and garden salads.</p>
@@ -977,7 +982,7 @@
         </div>
         <div class="menu-card">
           <div class="menu-card-photo">
-            <img src="assets/hotdog.jpg" alt="JJ's Cantina Sonoran hot dog" loading="lazy" />
+            <img src="assets/hotdog.jpg" alt="JJ's Cantina Sonoran hot dog" loading="lazy" class="zoom-in" />
           </div>
           <div class="menu-card-icon">🌭</div>
           <h3>Burgers, Dogs &amp; Sandwiches</h3>
