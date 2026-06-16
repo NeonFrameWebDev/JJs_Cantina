@@ -407,7 +407,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2.5rem;
-      align-items: center;
+      align-items: start;
     }
 
     .about-text p {
@@ -724,6 +724,7 @@
         var(--yellow) 70%,
         var(--teal) 100%);
       border-radius: 10px;
+      margin-top: 3rem;
       box-shadow:
         0 0 28px rgba(43,188,212,0.22),
         0 0 60px rgba(245,168,26,0.1),
@@ -777,9 +778,9 @@
 
     .about-stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
 
     /* RESPONSIVE */
@@ -853,32 +854,12 @@
   <section id="about">
     <div class="container">
       <div class="about-grid">
-        <div class="about-left">
-          <div class="about-text">
-            <p class="section-label">Our Story</p>
-            <h2 class="section-title">A Rocky Point <span>Legend</span></h2>
-            <p>JJ's Cantina didn't just open in Cholla Bay. <strong>It helped put Rocky Point on the map.</strong> Since 1984, this waterfront landmark has been the gathering place for locals, expats, and visitors from across the border who know that the best view of the Sea of Cortez comes with a cold margarita in hand.</p>
-            <p>Perched on the tiered stone terraces above the bay, JJ's is everything a cantina should be: <strong>unpretentious, welcoming, and alive.</strong> The walls are lined with decades of memories. The bartenders have poured a few thousand sunsets. The kitchen keeps it real with fresh, honest food that belongs right here on the water.</p>
-            <p>Recently renovated and better than ever, JJ's carries its history proudly while looking toward the future. <strong>Same legendary soul. Brand new experience.</strong></p>
-          </div>
-          <div class="about-stats">
-            <div class="stat-card">
-              <div class="stat-num">40+</div>
-              <div class="stat-desc"><strong>Years of History</strong>Serving Rocky Point since 1984.</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num">2</div>
-              <div class="stat-desc"><strong>Outdoor Bars</strong>Multi-tiered open-air patio with panoramic Sea of Cortez views.</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num">Live</div>
-              <div class="stat-desc"><strong>Music Every Weekend</strong>Multiple bands on the open-air stage under the Sonoran sky.</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num">&#9786;</div>
-              <div class="stat-desc"><strong>Pet Friendly</strong>Four-legged friends are welcome on the patio.</div>
-            </div>
-          </div>
+        <div class="about-text">
+          <p class="section-label">Our Story</p>
+          <h2 class="section-title">A Rocky Point <span>Legend</span></h2>
+          <p>JJ's Cantina didn't just open in Cholla Bay. <strong>It helped put Rocky Point on the map.</strong> Since 1984, this waterfront landmark has been the gathering place for locals, expats, and visitors from across the border who know that the best view of the Sea of Cortez comes with a cold margarita in hand.</p>
+          <p>Perched on the tiered stone terraces above the bay, JJ's is everything a cantina should be: <strong>unpretentious, welcoming, and alive.</strong> The walls are lined with decades of memories. The bartenders have poured a few thousand sunsets. The kitchen keeps it real with fresh, honest food that belongs right here on the water.</p>
+          <p>Recently renovated and better than ever, JJ's carries its history proudly while looking toward the future. <strong>Same legendary soul. Brand new experience.</strong></p>
         </div>
         <div class="asl-frame">
           <div class="about-slideshow">
@@ -897,6 +878,24 @@
               <button class="asl-dot" aria-label="Photo 6"></button>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">40+</div>
+          <div class="stat-desc"><strong>Years of History</strong>Serving Rocky Point since 1984.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2</div>
+          <div class="stat-desc"><strong>Outdoor Bars</strong>Multi-tiered open-air patio with panoramic Sea of Cortez views.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Live</div>
+          <div class="stat-desc"><strong>Music Every Weekend</strong>Multiple bands on the open-air stage under the Sonoran sky.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">&#9786;</div>
+          <div class="stat-desc"><strong>Pet Friendly</strong>Four-legged friends are welcome on the patio.</div>
         </div>
       </div>
     </div>
