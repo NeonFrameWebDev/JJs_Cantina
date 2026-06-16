@@ -988,12 +988,12 @@
     /* ============================================================
        Living sunset hero — high-detail canvas engine.
        The heavy static depth (a dense starfield, high cirrus, and the
-       framing headlands of Cholla Bay with saguaro silhouettes and
-       distant lights) is baked ONCE to an offscreen buffer, so each
-       frame's budget goes to the live stuff: the molten banded sun,
-       heat-haze at the waterline, the dancing reflection, layered
-       swell with foam, sparkle, drifting motes, gulls and a distant
-       flock. Renders at device resolution (up to ~3x on phones) and
+       Cholla Bay point with its beach-house community and distant skiff
+       lights) is baked ONCE to an offscreen buffer, so each frame's
+       budget goes to the live stuff: the molten banded sun, heat-haze
+       at the waterline, the dancing reflection, layered swell with foam,
+       sparkle, drifting motes, anchored pangas, gulls and a low line of
+       pelicans gliding the water. Renders at device resolution (up to ~3x) and
        throttles down on very large canvases via a pixel budget.
        iOS/Android identical (all canvas), pauses offscreen, honors
        reduced-motion.
@@ -1015,7 +1015,7 @@
       let skyGrad = null, seaGrad = null, bloomGrad = null, vignGrad = null, reflGrad = null;
       let horizonGlow = null, glowR = 0;
       let farBuffer = null;
-      let stars = [], gulls = [], flock = [], clouds = [], glints = [], sparkles = [], motes = [];
+      let stars = [], gulls = [], flock = [], clouds = [], glints = [], sparkles = [], motes = [], boats = [];
       let flockX = 0, flockY = 0, flockSp = 0;
       let t = 0, last = 0, running = false, rafId = 0, resizeTimer = 0;
       let px = 0, py = 0, tpx = 0, tpy = 0; // eased pointer parallax
@@ -1069,6 +1069,20 @@
         // leaving the centre horizon open for the sun + its reflection
         drawHeadland(f, true);
         drawHeadland(f, false);
+
+        // a distant skiff or two anchored out on the open water: a tiny
+        // warm light with a thread of reflection, set off to the flanks
+        f.globalCompositeOperation = 'lighter';
+        const fboats = Math.round(rnd(1, 3));
+        for (let i = 0; i < fboats; i++) {
+          const bx = Math.random() < 0.5 ? rnd(W * 0.28, W * 0.4) : rnd(W * 0.6, W * 0.72);
+          const by = horizon - rnd(0, 2);
+          f.fillStyle = 'rgba(255,212,150,0.9)';
+          f.beginPath(); f.arc(bx, by, rnd(0.7, 1.2), 0, TAU); f.fill();
+          f.fillStyle = 'rgba(255,190,120,0.45)';
+          f.fillRect(bx - 0.4, by + 1.2, 0.8, rnd(3, 6));
+        }
+        f.globalCompositeOperation = 'source-over';
       }
 
       function ridge(f, x0, x1, baseY, peaks, rough) {
@@ -1087,15 +1101,17 @@
       }
 
       function drawHeadland(f, left) {
-        const span = W * 0.30;
+        const span = W * (left ? 0.34 : 0.24);
         const x0 = left ? -W * 0.02 : W - span;
         const x1 = left ? span : W + W * 0.02;
         const baseY = horizon + 1;
-        const peaks = clamp(horizon * 0.16, 28, 120);
+        // the Cholla point rises into a low hill on the left; the right side
+        // is just a low sandy spit. Flat dune country, no mountains.
+        const peaks = left ? clamp(horizon * 0.17, 30, 122) : clamp(horizon * 0.06, 12, 44);
 
         f.save();
         f.beginPath();
-        ridge(f, x0, x1, baseY, peaks, left ? 1.3 : 2.7);
+        ridge(f, x0, x1, baseY, peaks, left ? 1.3 : 2.6);
         f.clip();
         const lg = f.createLinearGradient(0, baseY - peaks, 0, baseY);
         lg.addColorStop(0, '#0a151d');
@@ -1106,46 +1122,60 @@
         // warm rim toward the sun
         f.globalCompositeOperation = 'lighter';
         const ex = left ? x1 : x0;
-        const eg = f.createLinearGradient(ex, 0, ex + (left ? -70 : 70), 0);
-        eg.addColorStop(0, 'rgba(255,150,70,0.22)');
+        const eg = f.createLinearGradient(ex, 0, ex + (left ? -80 : 80), 0);
+        eg.addColorStop(0, 'rgba(255,150,70,0.20)');
         eg.addColorStop(1, 'rgba(255,150,70,0)');
         f.fillStyle = eg;
         f.fillRect(x0 - 5, baseY - peaks - 8, span + W * 0.08, peaks + 10);
+        f.globalCompositeOperation = 'source-over';
         f.restore();
 
-        // saguaro silhouettes — the desert meeting the sea
-        f.fillStyle = '#060d14';
-        for (let i = 0; i < 2; i++) {
-          const sx = left ? rnd(span * 0.2, span * 0.7) : rnd(W - span * 0.7, W - span * 0.2);
-          const groundY = baseY - rnd(peaks * 0.2, peaks * 0.5);
-          saguaro(f, sx, groundY, rnd(14, 26));
+        // the Cholla Bay beach-house community dotting the slope, roofs
+        // breaking the skyline with warm windows lit for the evening
+        const homes = left ? Math.round(rnd(7, 11)) : Math.round(rnd(2, 4));
+        for (let i = 0; i < homes; i++) {
+          const u = (i + rnd(-0.3, 0.3)) / homes;
+          const hx = left ? (span * 0.1 + u * span * 0.82) : (W - span * 0.88 + u * span * 0.8);
+          const uu = clamp(left ? (hx - x0) / (x1 - x0) : (x1 - hx) / (x1 - x0), 0, 1);
+          const ridgeY = baseY - Math.pow(1 - uu, 1.4) * peaks;
+          const groundY = ridgeY + rnd(1, Math.max(3, peaks * 0.18));
+          house(f, hx, groundY, rnd(7, 14), rnd(6, 12), Math.random() < 0.78);
         }
 
-        // distant warm lights (palapas / town)
+        // a few more window lights scattered lower on the hillside
         f.globalCompositeOperation = 'lighter';
-        const lights = Math.round(rnd(3, 6));
+        const lights = left ? Math.round(rnd(5, 9)) : Math.round(rnd(1, 3));
         for (let i = 0; i < lights; i++) {
-          const lx = left ? rnd(span * 0.1, span * 0.9) : rnd(W - span * 0.9, W - span * 0.1);
-          const ly = baseY - rnd(2, peaks * 0.4);
-          f.fillStyle = Math.random() < 0.5 ? 'rgba(255,200,120,0.9)' : 'rgba(255,170,90,0.8)';
+          const lx = left ? rnd(span * 0.1, span * 0.92) : rnd(W - span * 0.9, W - span * 0.1);
+          const ly = baseY - rnd(2, peaks * 0.55);
+          f.fillStyle = Math.random() < 0.5 ? 'rgba(255,200,120,0.9)' : 'rgba(255,168,84,0.85)';
           f.beginPath(); f.arc(lx, ly, rnd(0.6, 1.1), 0, TAU); f.fill();
         }
         f.globalCompositeOperation = 'source-over';
       }
 
-      function saguaro(f, x, g, h) {
-        const w = Math.max(2, h * 0.16);
-        f.beginPath();
-        f.rect(x - w / 2, g - h, w, h); // trunk
-        // left arm: out then up
-        const la = g - h * 0.58;
-        f.rect(x - w / 2 - h * 0.22, la, h * 0.22 + w * 0.4, w * 0.85);
-        f.rect(x - w / 2 - h * 0.22, la - h * 0.30, w * 0.85, h * 0.30);
-        // right arm: out then up (a touch higher)
-        const ra = g - h * 0.72;
-        f.rect(x + w / 2, ra, h * 0.22 + w * 0.4, w * 0.85);
-        f.rect(x + w / 2 + h * 0.22 - w * 0.45, ra - h * 0.34, w * 0.85, h * 0.34);
-        f.fill();
+      function house(f, x, baseY, w, h, lit) {
+        // a Cholla Bay beach house: boxy body, mostly flat-roofed with the
+        // odd pitched roof, and a warm window. No mountains, no cactus.
+        f.fillStyle = '#070f17';
+        f.fillRect(x - w / 2, baseY - h, w, h);
+        if (Math.random() < 0.38) { // pitched roof
+          f.beginPath();
+          f.moveTo(x - w / 2 - w * 0.12, baseY - h);
+          f.lineTo(x, baseY - h - h * 0.5);
+          f.lineTo(x + w / 2 + w * 0.12, baseY - h);
+          f.closePath();
+          f.fill();
+        } else { // flat roof with a low parapet
+          f.fillRect(x - w / 2 - w * 0.1, baseY - h - Math.max(1, h * 0.12), w * 1.2, Math.max(1, h * 0.12));
+        }
+        if (lit) {
+          f.globalCompositeOperation = 'lighter';
+          f.fillStyle = Math.random() < 0.5 ? 'rgba(255,196,110,0.95)' : 'rgba(255,168,80,0.9)';
+          const ww = Math.max(1.1, w * 0.16);
+          f.fillRect(x - ww * 0.6, baseY - h * 0.6, ww, Math.max(1.1, h * 0.2));
+          f.globalCompositeOperation = 'source-over';
+        }
       }
 
       /* ---------- cached gradients ---------- */
@@ -1224,15 +1254,24 @@
         const gn = W < 600 ? 3 : 6;
         for (let i = 0; i < gn; i++) gulls.push({ x: rnd(0, W), y: rnd(horizon * 0.24, horizon * 0.7), s: rnd(7, 15), sp: rnd(6, 16) * (Math.random() < 0.5 ? 1 : -1), ph: rnd(0, TAU), fl: rnd(2.3, 4), depth: rnd(0.4, 1) });
 
+        // a low single-file line of pelicans gliding over the water
         flock = [];
-        for (let i = 0; i < 7; i++) {
-          const rank = Math.ceil(i / 2);
-          const side = i === 0 ? 0 : (i % 2 === 1 ? -1 : 1);
-          flock.push({ rank, side, s: rnd(3, 4.6), ph: rnd(0, TAU) });
-        }
+        const pn = W < 600 ? 5 : 8;
+        for (let i = 0; i < pn; i++) flock.push({ i, s: rnd(7, 11), ph: i * 0.5 });
         flockX = rnd(W * 0.2, W * 0.8);
-        flockY = rnd(horizon * 0.34, horizon * 0.5);
-        flockSp = rnd(7, 12) * (Math.random() < 0.5 ? 1 : -1);
+        flockY = horizon + rnd(6, (H - horizon) * 0.1);
+        flockSp = rnd(9, 15) * (Math.random() < 0.5 ? 1 : -1);
+
+        // anchored pangas (local fishing skiffs) sitting in the bay
+        boats = [];
+        for (let i = 0; i < 3; i++) {
+          const center = Math.random() < 0.4;
+          boats.push({
+            x: center ? rnd(W * 0.44, W * 0.56) : (Math.random() < 0.5 ? rnd(W * 0.16, W * 0.4) : rnd(W * 0.6, W * 0.84)),
+            y: horizon + (H - horizon) * rnd(0.05, 0.2),
+            s: rnd(11, 22), ph: rnd(0, TAU)
+          });
+        }
 
         clouds = [];
         const cn = Math.round(7 * Q);
@@ -1336,26 +1375,56 @@
         ctx.beginPath(); ctx.arc(sx, sy, sunR, 0, TAU); ctx.stroke();
       }
 
-      function drawFlock(dt) {
+      function drawPelicans(dt) {
         flockX += flockSp * dt;
-        if (flockX < -60) flockX = W + 60; else if (flockX > W + 60) flockX = -60;
+        const span = flock.length * 22;
+        if (flockSp > 0 && flockX - span > W + 40) flockX = -span - 40;
+        else if (flockSp < 0 && flockX + span < -40) flockX = W + span + 40;
         const dir = flockSp < 0 ? -1 : 1;
-        ctx.strokeStyle = 'rgba(20,28,36,0.5)';
+        ctx.strokeStyle = 'rgba(16,24,32,0.6)';
         ctx.lineCap = 'round';
-        ctx.lineWidth = 1;
         for (const b of flock) {
-          const bx = flockX - dir * b.rank * 14 + px * 0.6;
-          const by = flockY + b.side * b.rank * 6 + py * 0.3;
-          const flap = Math.sin(t * 5 + b.ph);
-          const w = b.s * (0.6 + 0.4 * Math.abs(flap));
-          const dip = b.s * 0.6 * (0.3 + 0.7 * (1 - Math.abs(flap)));
+          const bx = flockX - dir * b.i * 22 + px * 0.5;
+          // glide low, rising and dipping gently with the swell
+          const by = flockY + Math.sin(bx * 0.012 + t * 0.6) * 5 + Math.sin(t * 0.5 + b.ph) * 2 + py * 0.2;
+          // pelicans glide a lot: small, slow wingbeats travelling down the line
+          const flap = Math.sin(t * 2.4 + b.ph) * 0.7;
+          const wsp = b.s * (1 + 0.15 * flap);
+          const dip = b.s * 0.5 * (0.5 + 0.5 * (1 - Math.abs(flap)));
+          ctx.lineWidth = Math.max(1, b.s * 0.1);
           ctx.beginPath();
-          ctx.moveTo(bx - b.s, by);
-          ctx.quadraticCurveTo(bx - w * 0.5, by - dip, bx, by);
-          ctx.quadraticCurveTo(bx + w * 0.5, by - dip, bx + b.s, by);
+          ctx.moveTo(bx - wsp, by);
+          ctx.quadraticCurveTo(bx - wsp * 0.42, by - dip, bx, by + b.s * 0.07);
+          ctx.quadraticCurveTo(bx + wsp * 0.42, by - dip, bx + wsp, by);
           ctx.stroke();
         }
         ctx.lineCap = 'butt';
+      }
+
+      function drawBoats() {
+        for (const b of boats) {
+          const s = b.s;
+          const by = b.y + Math.sin(t * 0.8 + b.ph) * 1.3;
+          const bx = b.x + px * 0.4;
+          // dark reflection breaking up the bright water below the hull
+          for (let r = 1; r < 6; r++) {
+            ctx.globalAlpha = 0.26 * (1 - r / 6);
+            ctx.fillStyle = '#0a1016';
+            const wob = Math.sin(t * 2 + r + b.ph) * 1.6;
+            ctx.fillRect(bx - s * 0.3 + wob, by + r * 2.1, s * 0.6, 1.3);
+          }
+          ctx.globalAlpha = 1;
+          // panga hull
+          ctx.fillStyle = 'rgba(9,15,21,0.95)';
+          ctx.beginPath();
+          ctx.moveTo(bx - s * 0.5, by);
+          ctx.quadraticCurveTo(bx - s * 0.2, by + s * 0.2, bx + s * 0.5, by);
+          ctx.quadraticCurveTo(bx + s * 0.28, by + s * 0.04, bx - s * 0.28, by + s * 0.04);
+          ctx.closePath();
+          ctx.fill();
+          // little motor/pole astern
+          ctx.fillRect(bx - s * 0.5, by - s * 0.34, Math.max(1, s * 0.05), s * 0.34);
+        }
       }
 
       function drawGulls(dt) {
@@ -1470,7 +1539,6 @@
         ctx.globalCompositeOperation = 'source-over';
 
         drawSun(sx, sy);
-        drawFlock(dt);
         drawGulls(dt);
 
         // SEA covers the lower rim of the sun
@@ -1502,6 +1570,8 @@
         ctx.globalAlpha = 1;
 
         drawWaves();
+        drawBoats();      // pangas anchored in the bay, with reflections
+        drawPelicans(dt); // a low line gliding over the water
 
         // sparkle field
         ctx.fillStyle = '#e6f6fa';
