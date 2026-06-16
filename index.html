@@ -1130,16 +1130,28 @@
         f.globalCompositeOperation = 'source-over';
         f.restore();
 
-        // the Cholla Bay beach-house community dotting the slope, roofs
+        // the Cholla Bay beach-house community sitting on the crest, roofs
         // breaking the skyline with warm windows lit for the evening
-        const homes = left ? Math.round(rnd(7, 11)) : Math.round(rnd(2, 4));
+        const sunSide = left ? 1 : -1; // sun is centre-frame
+        const homes = left ? Math.round(rnd(8, 12)) : Math.round(rnd(2, 4));
         for (let i = 0; i < homes; i++) {
-          const u = (i + rnd(-0.3, 0.3)) / homes;
-          const hx = left ? (span * 0.1 + u * span * 0.82) : (W - span * 0.88 + u * span * 0.8);
+          const u = (i + 0.5) / homes + rnd(-0.4 / homes, 0.4 / homes);
+          const hx = left ? (span * 0.08 + u * span * 0.86) : (W - span * 0.9 + u * span * 0.82);
           const uu = clamp(left ? (hx - x0) / (x1 - x0) : (x1 - hx) / (x1 - x0), 0, 1);
           const ridgeY = baseY - Math.pow(1 - uu, 1.4) * peaks;
-          const groundY = ridgeY + rnd(1, Math.max(3, peaks * 0.18));
-          house(f, hx, groundY, rnd(7, 14), rnd(6, 12), Math.random() < 0.78);
+          const sizeF = 0.6 + uu * 0.8; // bigger front-row homes near the water
+          house(f, hx, ridgeY + rnd(0, 2), rnd(8, 15) * sizeF, rnd(6, 13) * sizeF, Math.random() < 0.8, sunSide);
+        }
+
+        // a couple of palms tucked among the homes on the point
+        if (left) {
+          const palms = Math.round(rnd(1, 3));
+          for (let i = 0; i < palms; i++) {
+            const pxx = rnd(span * 0.18, span * 0.85);
+            const uu = clamp((pxx - x0) / (x1 - x0), 0, 1);
+            const ridgeY = baseY - Math.pow(1 - uu, 1.4) * peaks;
+            palm(f, pxx, ridgeY + 1, rnd(12, 20));
+          }
         }
 
         // a few more window lights scattered lower on the hillside
@@ -1154,28 +1166,67 @@
         f.globalCompositeOperation = 'source-over';
       }
 
-      function house(f, x, baseY, w, h, lit) {
-        // a Cholla Bay beach house: boxy body, mostly flat-roofed with the
-        // odd pitched roof, and a warm window. No mountains, no cactus.
-        f.fillStyle = '#070f17';
-        f.fillRect(x - w / 2, baseY - h, w, h);
-        if (Math.random() < 0.38) { // pitched roof
+      function house(f, x, baseY, w, h, lit, sunSide) {
+        // a Cholla Bay beach house silhouetted on the point. Boxy, some
+        // raised on stilts over the sand, flat roofs and the odd pitch,
+        // a warm window or two, and a sunlit edge so it reads as a shape.
+        const stilt = Math.random() < 0.45;
+        const legH = stilt ? rnd(3, 7) : 0;
+        const body = baseY - legH;
+        if (stilt) { // pilings
+          f.fillStyle = '#060c12';
+          const lw = Math.max(1, w * 0.08);
+          f.fillRect(x - w / 2 + lw, body - 1, lw, legH + 3);
+          f.fillRect(x + w / 2 - lw * 2, body - 1, lw, legH + 3);
+        }
+        f.fillStyle = '#0b141d';
+        f.fillRect(x - w / 2, body - h, w, h);
+        if (Math.random() < 0.34) { // low pitched roof
           f.beginPath();
-          f.moveTo(x - w / 2 - w * 0.12, baseY - h);
-          f.lineTo(x, baseY - h - h * 0.5);
-          f.lineTo(x + w / 2 + w * 0.12, baseY - h);
+          f.moveTo(x - w / 2 - w * 0.1, body - h);
+          f.lineTo(x, body - h - h * 0.45);
+          f.lineTo(x + w / 2 + w * 0.1, body - h);
           f.closePath();
           f.fill();
-        } else { // flat roof with a low parapet
-          f.fillRect(x - w / 2 - w * 0.1, baseY - h - Math.max(1, h * 0.12), w * 1.2, Math.max(1, h * 0.12));
+        } else { // flat roof with a slim parapet
+          f.fillRect(x - w / 2 - w * 0.12, body - h - Math.max(1, h * 0.14), w * 1.24, Math.max(1, h * 0.14));
         }
+        // sunlit edge on the side facing the sun (centre of frame)
+        f.globalCompositeOperation = 'lighter';
+        f.fillStyle = 'rgba(255,150,80,0.28)';
+        const ex = sunSide > 0 ? (x + w / 2 - Math.max(1, w * 0.12)) : (x - w / 2);
+        f.fillRect(ex, body - h, Math.max(1, w * 0.12), h);
+        // warm window(s)
         if (lit) {
-          f.globalCompositeOperation = 'lighter';
-          f.fillStyle = Math.random() < 0.5 ? 'rgba(255,196,110,0.95)' : 'rgba(255,168,80,0.9)';
-          const ww = Math.max(1.1, w * 0.16);
-          f.fillRect(x - ww * 0.6, baseY - h * 0.6, ww, Math.max(1.1, h * 0.2));
-          f.globalCompositeOperation = 'source-over';
+          const wins = Math.random() < 0.5 ? 1 : 2;
+          for (let k = 0; k < wins; k++) {
+            f.fillStyle = Math.random() < 0.5 ? 'rgba(255,198,112,0.95)' : 'rgba(255,170,84,0.9)';
+            const ww = Math.max(1, w * 0.14), wh = Math.max(1, h * 0.22);
+            f.fillRect(x - w * 0.2 + k * w * 0.34, body - h * 0.62, ww, wh);
+          }
         }
+        f.globalCompositeOperation = 'source-over';
+      }
+
+      function palm(f, x, baseY, h) {
+        f.strokeStyle = '#0a121a';
+        f.lineCap = 'round';
+        f.lineWidth = Math.max(1, h * 0.07);
+        const tx = x + h * 0.05, ty = baseY - h;
+        f.beginPath(); // gently curved trunk
+        f.moveTo(x, baseY);
+        f.quadraticCurveTo(x + h * 0.09, baseY - h * 0.5, tx, ty);
+        f.stroke();
+        f.lineWidth = Math.max(1, h * 0.045); // drooping fronds
+        for (let i = 0; i < 6; i++) {
+          const a = (-150 + i * (120 / 5)) * Math.PI / 180;
+          f.beginPath();
+          f.moveTo(tx, ty);
+          f.quadraticCurveTo(tx + Math.cos(a) * h * 0.22, ty + Math.sin(a) * h * 0.22 - h * 0.05,
+                             tx + Math.cos(a) * h * 0.44, ty + Math.sin(a) * h * 0.44);
+          f.stroke();
+        }
+        f.lineCap = 'butt';
       }
 
       /* ---------- cached gradients ---------- */
@@ -1264,12 +1315,13 @@
 
         // anchored pangas (local fishing skiffs) sitting in the bay
         boats = [];
-        for (let i = 0; i < 3; i++) {
-          const center = Math.random() < 0.4;
+        const boatN = W < 600 ? 3 : 4;
+        for (let i = 0; i < boatN; i++) {
+          const center = Math.random() < 0.35;
           boats.push({
-            x: center ? rnd(W * 0.44, W * 0.56) : (Math.random() < 0.5 ? rnd(W * 0.16, W * 0.4) : rnd(W * 0.6, W * 0.84)),
-            y: horizon + (H - horizon) * rnd(0.05, 0.2),
-            s: rnd(11, 22), ph: rnd(0, TAU)
+            x: center ? rnd(W * 0.44, W * 0.56) : (Math.random() < 0.5 ? rnd(W * 0.14, W * 0.4) : rnd(W * 0.6, W * 0.86)),
+            y: horizon + (H - horizon) * rnd(0.04, 0.22),
+            s: rnd(16, 30), ph: rnd(0, TAU), face: Math.random() < 0.5 ? 1 : -1
           });
         }
 
@@ -1404,26 +1456,39 @@
       function drawBoats() {
         for (const b of boats) {
           const s = b.s;
-          const by = b.y + Math.sin(t * 0.8 + b.ph) * 1.3;
+          const by = b.y + Math.sin(t * 0.8 + b.ph) * 1.2;
           const bx = b.x + px * 0.4;
-          // dark reflection breaking up the bright water below the hull
-          for (let r = 1; r < 6; r++) {
-            ctx.globalAlpha = 0.26 * (1 - r / 6);
+          const dir = b.face || 1;
+          // wavering dark reflection on the bright water below the hull
+          for (let r = 1; r < 7; r++) {
+            ctx.globalAlpha = 0.24 * (1 - r / 7);
             ctx.fillStyle = '#0a1016';
             const wob = Math.sin(t * 2 + r + b.ph) * 1.6;
-            ctx.fillRect(bx - s * 0.3 + wob, by + r * 2.1, s * 0.6, 1.3);
+            ctx.fillRect(bx - s * 0.34 + wob, by + r * 1.9, s * 0.68, 1.2);
           }
           ctx.globalAlpha = 1;
-          // panga hull
-          ctx.fillStyle = 'rgba(9,15,21,0.95)';
+          ctx.save();
+          ctx.translate(bx, by);
+          ctx.scale(dir, 1);
+          // low panga hull with an upturned bow
+          ctx.fillStyle = '#0a121b';
           ctx.beginPath();
-          ctx.moveTo(bx - s * 0.5, by);
-          ctx.quadraticCurveTo(bx - s * 0.2, by + s * 0.2, bx + s * 0.5, by);
-          ctx.quadraticCurveTo(bx + s * 0.28, by + s * 0.04, bx - s * 0.28, by + s * 0.04);
+          ctx.moveTo(-s * 0.52, -s * 0.02);
+          ctx.lineTo(s * 0.40, -s * 0.12);
+          ctx.quadraticCurveTo(s * 0.56, -s * 0.14, s * 0.52, 0);
+          ctx.quadraticCurveTo(s * 0.10, s * 0.18, -s * 0.40, s * 0.12);
           ctx.closePath();
           ctx.fill();
-          // little motor/pole astern
-          ctx.fillRect(bx - s * 0.5, by - s * 0.34, Math.max(1, s * 0.05), s * 0.34);
+          // centre console / standing figure
+          ctx.fillRect(-s * 0.06, -s * 0.28, Math.max(1, s * 0.1), s * 0.26);
+          // outboard motor at the stern
+          ctx.fillRect(-s * 0.56, -s * 0.05, Math.max(1, s * 0.06), s * 0.2);
+          // warm catch-light along the sunlit sheer
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.fillStyle = 'rgba(255,160,90,0.5)';
+          ctx.fillRect(-s * 0.5, -s * 0.13, s * 0.92, Math.max(0.8, s * 0.04));
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.restore();
         }
       }
 
@@ -1570,10 +1635,12 @@
         ctx.globalAlpha = 1;
 
         drawWaves();
+        ctx.globalCompositeOperation = 'source-over'; // dark silhouettes need normal blend
         drawBoats();      // pangas anchored in the bay, with reflections
         drawPelicans(dt); // a low line gliding over the water
 
-        // sparkle field
+        // sparkle field (additive)
+        ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = '#e6f6fa';
         for (const s of sparkles) {
           const tw = Math.sin(t * s.sp + s.ph);
